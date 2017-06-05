@@ -21,6 +21,18 @@ class Api::UsersController < ApiController
         end
     end
 
+    def destroy
+        begin
+            user = User.find(params[:id])
+            user.destroy
+            #  Return HTTP 204 No Content to indicate the server successfully processed
+            # the request but is not returning any content.
+            render json: {}, status: :no_content
+        rescue ActiveRecord::RecordNotFound
+            render :json => {}, :status => :not_found
+        end
+    end
+
     private
     def user_params
         params.require(:user).permit(:name, :password)

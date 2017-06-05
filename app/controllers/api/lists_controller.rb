@@ -14,6 +14,19 @@ class Api::ListsController < ApiController
             render json: { errors: list.errors.full_messages }, status: :unprocessable_entity
         end
     end
+    
+    def destroy
+        begin
+            user = User.find(params[:user_id])
+            list = user.lists.find(params[:id])
+            list.destroy
+            #  Return HTTP 204 No Content to indicate the server successfully processed
+            # the request but is not returning any content.
+            render json: {}, status: :no_content
+        rescue ActiveRecord::RecordNotFound
+            render :json => {}, :status => :not_found
+        end
+    end
 
     private
     def list_params
